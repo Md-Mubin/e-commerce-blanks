@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"outDir": "./dist",
-		"rootDir": "./src",
 		"target": "es2016",
 		"module": "ESNext",
 		"esModuleInterop": true,
@@ -11,6 +10,5 @@
 		"skipLibCheck": true,
 		"moduleResolution": "node"
 		// "baseUrl": ".", // Add this line
-	},
-	"include": ["src"]
+	}
 }
