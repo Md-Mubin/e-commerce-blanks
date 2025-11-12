@@ -1,0 +1,162 @@
+//
+
+export const orderStatus = [
+	{
+		label: 'Pending',
+		value: 'pending',
+	},
+	{
+		label: 'Order Placed',
+		value: 'order-placed',
+	},
+	{
+		label: 'Processing',
+		value: 'processing',
+	},
+	{
+		label: 'Failed',
+		value: 'failed',
+	},
+
+	{
+		label: 'Completed',
+		value: 'completed',
+	},
+	{
+		label: 'Refunded',
+		value: 'refunded',
+	},
+	{
+		label: 'Cancelled',
+		value: 'cancelled',
+	},
+];
+
+const schema = {
+	invoice: {
+		label: 'Invoice',
+		type: 'string',
+		displayInTable: true,
+		default: true,
+		sort: true,
+	},
+	pickupTime: {
+		label: 'Pickup Time',
+		type: 'string',
+		displayInTable: true,
+		default: true,
+	},
+	total: {
+		label: 'Total Price',
+		type: 'number',
+		displayInTable: true,
+	},
+	profit: {
+		label: 'Profit',
+		type: 'number',
+		displayInTable: true,
+	},
+	vat: {
+		label: 'VAT',
+		type: 'number',
+		displayInTable: true,
+	},
+	subTotal: {
+		label: 'Sub Total',
+		type: 'number',
+		default: true,
+		displayInTable: true,
+	},
+	paidAmount: {
+		label: 'Paid Amount',
+		type: 'number',
+		displayInTable: true,
+	},
+	returnAmount: {
+		label: 'Return Amount',
+		type: 'number',
+		displayInTable: true,
+		default: true,
+	},
+	dueAmount: {
+		label: 'Due Amount',
+		type: 'number',
+		displayInTable: true,
+	},
+	isPaid: {
+		label: 'Is Paid',
+		type: 'checkbox',
+		displayInTable: true,
+		colorScheme: (isPaid: boolean) => (isPaid ? 'green' : 'red'),
+	},
+	isPickup: {
+		label: 'Is Pickup',
+		type: 'checkbox',
+		displayInTable: true,
+	},
+
+	coupon: {
+		label: 'Coupon',
+		type: 'string',
+		displayInTable: true,
+	},
+	// origin: {
+	// 	label: 'Order From',
+	// 	type: 'string',
+	// 	displayInTable: true,
+	// },
+	address: {
+		label: 'Address',
+		type: 'object',
+	},
+	shippingDetails: {
+		label: 'Shipping Details',
+		type: 'object',
+	},
+	shippingCharge: {
+		label: 'Shipping Charge',
+		type: 'number',
+	},
+	items: {
+		label: 'Items',
+		type: 'array',
+		displayInTable: true,
+	},
+	totalItems: {
+		label: 'Total Items',
+		type: 'number',
+		displayInTable: true,
+		default: true,
+	},
+	status: {
+		label: 'Delivery Status',
+		type: 'text',
+		// tableType: 'tag',
+		// type: 'string',
+		// displayInTable: true,
+		colorScheme: (status: string) => {
+			if (status == 'order-placed') return 'blue';
+			else if (status == 'completed') return 'green';
+			else if (status == 'cancelled') return 'red';
+			else if (status == 'order-placed') return 'purple';
+			else return 'purple';
+		},
+		displayInTable: true,
+		default: true,
+	},
+	pickupDate: {
+		label: 'Pickup Date',
+		type: 'date',
+		sort: true,
+		displayInTable: true,
+	},
+	customer: {
+		label: 'Customer',
+		type: 'text',
+		displayInTable: true,
+		default: true,
+		tableKey: 'customer.name',
+	},
+};
+
+export default schema;

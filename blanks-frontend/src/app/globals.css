@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+
+@import 'tailwindcss';
+/*
+black  ===> #000
+white  ===> #fff
+primaryText ==> #282828
+secondaryText ==> #505050
+input placeholder ==> #454545
+hover color ==> #4d88ff 
+hover colro 2 ==> #505050
+categoryText ==> #a5a5a5
+
+======> font sizes
+14px 400 == secondary font
+14px 700 ==> primary font
+16px 700 ==> fontBase
+section title ==> 20px 700
+*/
+:root {
+	--black-original: #000;
+	--black: #eeebe6;
+	/* --black: #000; */
+	--white: #fff;
+	/* --primaryColor: #4f200d; */
+	--primaryColor: #000;
+	/* --primaryColor: #282828; */
+	--secondaryColor: #474343;
+	/* --secondaryColor: #505050; */
+	--headerBg: #eeebe6;
+	/* --headerBg: #000; */
+	--category-text: #724d3d;
+	/* --category-text: #a5a5a5; */
+	--bodyColor: #faf9f4;
+	--primary-border: #000;
+	--secondary-border: #eeebe6;
+	/* --secondary-border: #dcdcdc; */
+	--hover-color: #000;
+	--borderBg: #4f200d;
+	/* --secondaryBg: #eeebe6; */
+	--red400: #ac2722;
+	--sectionGapLg: 30px;
+	--sectionGapSm: 20px;
+	/* older */
+	--font-primary: 'Karla', sans-serif;
+	--pagePadX: 80px;
+	/* later */
+	/* --primaryTextColor: #4f200d;
+	--borderColor: #4f200d;
+	--primaryTextColor: #4f200d; */
+}
+
+@theme inline {
+	--color-black: var(--black);
+	--color-black-original: var(--black-original);
+	--color-white: var(--white);
+	--color-bodyColor: var(--bodyColor);
+	--color-borderBg: var(--borderBg);
+	--color-headerBg: var(--headerBg);
+	--color-primaryColor: var(--primaryColor);
+	--color-secondaryColor: var(--secondaryColor);
+	--color-categoryText: var(--category-text);
+	--color-primaryBorder: var(--primary-border);
+	--color-secondaryBorder: var(--secondary-border);
+	--color-hoverColor: var(--hover-color);
+	--color-red400: var(--red400);
+	/* older */
+	--color-primaryBg: var(--primaryBg);
+	--color-primaryText: var(--primaryText);
+	--color-buttonHover: var(--buttonHover);
+	--color-tagHover: var(--tagHover);
+	--color-button: var(--button);
+	--color-button-dark: var(--button-dark);
+	--font-primary: var(--font-primary);
+	/* --font-secondary: var(--font-secondary); */
+	--spacing-sectionGapLg: var(--sectionGapLg);
+	--spacing-sectionGapSm: var(--sectionGapSm);
+	--spacing-pagePadX: var(--pagePadX);
+	/* border radius */
+
+	--radius-md: 8px;
+	/* custom breakpoints 
+	30rem ==> 480
+	40rem ==> 640
+	48rem ==> 768
+	*/
+	--breakpoint-xs: 30rem;
+	--breakpoint-sm: 40rem;
+	--breakpoint-md: 48rem;
+	--breakpoint-lg: 64rem;
+	--breakpoint-xl: 80rem;
+	--breakpoint-2xl: 96rem;
+}
+
+body {
+	font-family: var(--font-primary);
+	font-weight: 300;
+	line-height: 1.5;
+	background-color: var(--bodyColor);
+}
+
+.homeSlider .swiper-pagination-bullet {
+	background-color: var(--secondary-border); /* Change bullet color */
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	opacity: 0.5;
+}
+
+.homeSlider .swiper-pagination-bullet-active {
+	width: 24px;
+	height: 6px;
+	border-radius: 5px;
+	background-color: var(--hover-color); /* Change active bullet color */
+	opacity: 1;
+}
+
+.homeSlider .swiper-button-prev {
+	color: var(--secondary-border);
+}
+.homeSlider .swiper-button-next {
+	color: var(--secondary-border);
+}
+.homeSlider .swiper-button-prev::after,
+.homeSlider .swiper-button-next::after {
+	font-size: 30px;
+	font-weight: 100;
+	color: var(--secondary-border);
+}
+
+/* remove arrows for number input */
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.no-arrows {
+	-moz-appearance: textfield; /* Firefox */
+}
+
+/// card border effect
+@property --border-angle {
+	inherits: false;
+	initial-value: 0deg;
+	syntax: '<angle>';
+}

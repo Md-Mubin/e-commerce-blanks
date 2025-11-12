@@ -1,0 +1,495 @@
+// 'use client';
+
+// import React, { useEffect } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import {
+// 	setCurrentStep,
+// 	updateCustomer,
+// 	updateShippingAddress,
+// 	updateBillingAddress,
+// 	toggleUseShippingAsBilling,
+// 	updatePaymentInfo,
+// 	setOrderItems,
+// 	resetCheckout,
+// } from '@/store/slices/checkoutSlice';
+// import { RootState } from '@/store';
+// import { useRouter } from 'next/navigation';
+// import { ButtonPrimary } from '@/components/reusables';
+// import { SecondaryInputField } from '@/components/Signup';
+
+// // Validation functions per step
+// const validateCustomer = (customer: { email: string; phone?: string }) => {
+// 	return /\S+@\S+\.\S+/.test(customer.email); // Basic email validation
+// };
+
+// const validateAddress = (address: {
+// 	fullName: string;
+// 	street: string;
+// 	city: string;
+// 	state: string;
+// 	postalCode: string;
+// 	country: string;
+// }) => {
+// 	return Object.values(address).every(value => value.trim() !== '');
+// };
+
+// const validatePayment = (paymentInfo: {
+// 	method: string;
+// 	cardNumber?: string;
+// 	expiry?: string;
+// 	cvv?: string;
+// 	nameOnCard?: string;
+// }) => {
+// 	if (paymentInfo.method === 'credit_card') {
+// 		return (
+// 			paymentInfo.cardNumber?.length === 16 &&
+// 			paymentInfo.expiry?.match(/^\d{2}\/\d{2}$/) &&
+// 			paymentInfo.cvv?.length === 3 &&
+// 			paymentInfo.nameOnCard?.trim() !== ''
+// 		);
+// 	}
+// 	return true; // Other methods don't require additional fields
+// };
+
+// const CheckoutPage: React.FC = () => {
+// 	const dispatch = useDispatch();
+// 	const router = useRouter();
+// 	const {
+// 		currentStep,
+// 		customer,
+// 		shippingAddress,
+// 		billingAddress,
+// 		useShippingAsBilling,
+// 		paymentInfo,
+// 		orderItems,
+// 		subtotal,
+// 		shippingCost,
+// 		tax,
+// 		grandTotal,
+// 	} = useSelector((state: any) => state.checkout);
+
+// 	const handleContinue = () => {
+// 		let isValid: any = false;
+// 		switch (currentStep) {
+// 			case 0:
+// 				isValid = validateCustomer(customer);
+// 				break;
+// 			case 1:
+// 				isValid = validateAddress(shippingAddress);
+// 				break;
+// 			case 2:
+// 				if (useShippingAsBilling) {
+// 					isValid = true; // Auto-copied
+// 				} else {
+// 					isValid = billingAddress ? validateAddress(billingAddress) : false;
+// 				}
+// 				break;
+// 			case 3:
+// 				isValid = validatePayment(paymentInfo);
+// 				if (isValid) {
+// 					// Simulate order placement
+// 					console.log('Order placed:', {
+// 						customer,
+// 						shippingAddress,
+// 						billingAddress,
+// 						paymentInfo,
+// 						orderItems,
+// 						grandTotal,
+// 					});
+// 					dispatch(resetCheckout());
+// 					// router.push('/order-confirmation');
+// 					return;
+// 				}
+// 				break;
+// 		}
+// 		if (isValid) {
+// 			dispatch(setCurrentStep((currentStep + 1) as 0 | 1 | 2 | 3));
+// 		} else {
+// 			console.log('fill the required fields!');
+// 		}
+// 	};
+
+// const renderSummary = (step: 0 | 1 | 2 | 3) => {
+// 	let content = '';
+// 	switch (step) {
+// 		case 0:
+// 			content = customer.email;
+// 			break;
+// 		case 1:
+// 			content = `${shippingAddress.fullName}, ${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.postalCode}, ${shippingAddress.country}`;
+// 			break;
+// 		case 2:
+// 			const addr = useShippingAsBilling ? shippingAddress : billingAddress;
+// 			content = addr
+// 				? `${addr.fullName}, ${addr.street}, ${addr.city}, ${addr.state}, ${addr.postalCode}, ${addr.country}`
+// 				: 'Same as shipping';
+// 			break;
+// 		case 3:
+// 			content = `Method: ${paymentInfo.method.replace('_', ' ')}`;
+// 			break;
+// 	}
+// 	return (
+// 		<div className='flex justify-between items-center'>
+// 			<p>{content}</p>
+// 			<button
+// 				onClick={() => dispatch(setCurrentStep(step))}
+// 				className='text-blue-600 hover:underline'
+// 			>
+// 				Edit
+// 			</button>
+// 		</div>
+// 	);
+// };
+
+// 	const renderForm = (step: 0 | 1 | 2 | 3) => {
+// 		switch (step) {
+// 			case 0:
+// 				return (
+// 					<div className='grid grid-cols-1 gap-4'>
+// 						<SecondaryInputField
+// 							label='Email'
+// 							name='customerEmail'
+// 							type='email'
+// 							placeholder='Email'
+// 							value={customer.email}
+// 							onChange={e =>
+// 								dispatch(updateCustomer({ email: e.target.value }))
+// 							}
+// 							className='mb-0'
+// 						/>
+// 					</div>
+// 				);
+// 			case 1:
+// 				return (
+// 					<div className='grid grid-cols-1 gap-4'>
+// 						<SecondaryInputField
+// 							label='Full Name'
+// 							type='text'
+// 							name='fullName'
+// 							placeholder='Full Name'
+// 							value={shippingAddress.fullName}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 						<SecondaryInputField
+// 							label='Street Address'
+// 							type='text'
+// 							name='street'
+// 							placeholder='Street Address'
+// 							value={shippingAddress.street}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 						<SecondaryInputField
+// 							label='City'
+// 							type='text'
+// 							name='city'
+// 							placeholder='City'
+// 							value={shippingAddress.city}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 						<SecondaryInputField
+// 							label='State/Province'
+// 							type='text'
+// 							name='state'
+// 							placeholder='State/Province'
+// 							value={shippingAddress.state}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 						<SecondaryInputField
+// 							label='Postal Code'
+// 							type='text'
+// 							name='postalCode'
+// 							placeholder='Postal Code'
+// 							value={shippingAddress.postalCode}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 						<SecondaryInputField
+// 							label='Country'
+// 							type='text'
+// 							name='country'
+// 							placeholder='Country'
+// 							value={shippingAddress.country}
+// 							onChange={e =>
+// 								dispatch(
+// 									updateShippingAddress({ [e.target.name]: e.target.value })
+// 								)
+// 							}
+// 							className='mb-0'
+// 						/>
+// 					</div>
+// 				);
+// 			case 2:
+// 				return (
+// 					<div className='grid grid-cols-1 gap-4'>
+// 						<label className='flex items-center'>
+// 							<input
+// 								type='checkbox'
+// 								checked={useShippingAsBilling}
+// 								onChange={e =>
+// 									dispatch(toggleUseShippingAsBilling(e.target.checked))
+// 								}
+// 								className='mr-2'
+// 							/>
+// 							Use shipping address as billing address
+// 						</label>
+// 						{!useShippingAsBilling && (
+// 							<>
+// 								<SecondaryInputField
+// 									label='Full Name'
+// 									type='text'
+// 									name='fullName'
+// 									placeholder='Full Name'
+// 									value={billingAddress?.fullName || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									label='Street Address'
+// 									type='text'
+// 									name='street'
+// 									placeholder='Street Address'
+// 									value={billingAddress?.street || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									label='City'
+// 									type='text'
+// 									name='city'
+// 									placeholder='City'
+// 									value={billingAddress?.city || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									label='State/Province'
+// 									type='text'
+// 									name='state'
+// 									placeholder='State/Province'
+// 									value={billingAddress?.state || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									label='Postal Code'
+// 									type='text'
+// 									name='postalCode'
+// 									placeholder='Postal Code'
+// 									value={billingAddress?.postalCode || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									label='Country'
+// 									type='text'
+// 									name='country'
+// 									placeholder='Country'
+// 									value={billingAddress?.country || ''}
+// 									onChange={e =>
+// 										dispatch(
+// 											updateBillingAddress({ [e.target.name]: e.target.value })
+// 										)
+// 									}
+// 									className='mb-0'
+// 								/>
+// 							</>
+// 						)}
+// 					</div>
+// 				);
+// 			case 3:
+// 				return (
+// 					<div className='grid grid-cols-1 gap-4'>
+// 						<label className='flex items-center'>
+// 							<input
+// 								type='radio'
+// 								name='method'
+// 								value='credit_card'
+// 								checked={paymentInfo.method === 'credit_card'}
+// 								onChange={e =>
+// 									dispatch(updatePaymentInfo({ method: e.target.value as any }))
+// 								}
+// 								className='mr-2'
+// 							/>
+// 							Credit Card
+// 						</label>
+// 						{paymentInfo.method === 'credit_card' && (
+// 							<div className='grid grid-cols-1 gap-4 pl-4'>
+// 								<SecondaryInputField
+// 									// label='Name on Card'
+// 									name='nameOnCard'
+// 									type='text'
+// 									placeholder='Name on Card'
+// 									value={paymentInfo.nameOnCard || ''}
+// 									onChange={e =>
+// 										dispatch(updatePaymentInfo({ nameOnCard: e.target.value }))
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<SecondaryInputField
+// 									name='cardNumber'
+// 									type='text'
+// 									placeholder='Card Number'
+// 									value={paymentInfo.cardNumber || ''}
+// 									onChange={e =>
+// 										dispatch(updatePaymentInfo({ cardNumber: e.target.value }))
+// 									}
+// 									className='mb-0'
+// 								/>
+// 								<div className='grid grid-cols-2 gap-4'>
+// 									<SecondaryInputField
+// 										name='expiry'
+// 										type='text'
+// 										placeholder='MM/YY'
+// 										value={paymentInfo.expiry || ''}
+// 										onChange={e =>
+// 											dispatch(updatePaymentInfo({ expiry: e.target.value }))
+// 										}
+// 										className='mb-0'
+// 									/>
+// 									<SecondaryInputField
+// 										name='cvv'
+// 										type='text'
+// 										placeholder='CVV'
+// 										value={paymentInfo.cvv || ''}
+// 										onChange={e =>
+// 											dispatch(updatePaymentInfo({ cvv: e.target.value }))
+// 										}
+// 										className='mb-0'
+// 									/>
+// 								</div>
+// 							</div>
+// 						)}
+// 						<label className='flex items-center'>
+// 							<input
+// 								type='radio'
+// 								name='method'
+// 								value='paypal'
+// 								checked={paymentInfo.method === 'paypal'}
+// 								onChange={e =>
+// 									dispatch(updatePaymentInfo({ method: e.target.value as any }))
+// 								}
+// 								className='mr-2'
+// 							/>
+// 							PayPal
+// 						</label>
+// 						<label className='flex items-center'>
+// 							<input
+// 								type='radio'
+// 								name='method'
+// 								value='apple_pay'
+// 								checked={paymentInfo.method === 'apple_pay'}
+// 								onChange={e =>
+// 									dispatch(updatePaymentInfo({ method: e.target.value as any }))
+// 								}
+// 								className='mr-2'
+// 							/>
+// 							Apple Pay
+// 						</label>
+// 						<label className='flex items-center'>
+// 							<input
+// 								type='radio'
+// 								name='method'
+// 								value='interac'
+// 								checked={paymentInfo.method === 'interac'}
+// 								onChange={e =>
+// 									dispatch(updatePaymentInfo({ method: e.target.value as any }))
+// 								}
+// 								className='mr-2'
+// 							/>
+// 							Interac e-Transfer
+// 						</label>
+// 					</div>
+// 				);
+// 		}
+// 	};
+
+// 	const steps = ['Customer', 'Shipping', 'Billing', 'Payment'];
+
+// 	return (
+// 		<div className='md:w-2/3'>
+// 			{steps.map((stepName, index) => {
+// 				const stepIndex = index as 0 | 1 | 2 | 3;
+// 				const isActive = stepIndex === currentStep;
+
+// 				return (
+// 					<div
+// 						key={stepName}
+// 						className={`mb-6 border-b border-secondaryBorder pb-4 ${
+// 							isActive ? 'bg-gray-50' : ''
+// 						}`}
+// 					>
+// 						<h2 className='text-xl font-semibold flex justify-between items-center'>
+// 							{stepName}
+// 						</h2>
+// 						{stepIndex <= currentStep && (
+// 							<button
+// 								onClick={() => dispatch(setCurrentStep(stepIndex))}
+// 								className='text-primaryColor hover:underline text-sm'
+// 							>
+// 								{stepIndex < currentStep ? 'Edit' : ''}
+// 							</button>
+// 						)}
+// 						{isActive && (
+// 							<>
+// 								{renderForm(stepIndex)}
+// 								<ButtonPrimary
+// 									onClick={handleContinue}
+// 									className='mt-4 rounded-sm'
+// 								>
+// 									{stepIndex === 3 ? 'Place Order' : 'Continue'}
+// 								</ButtonPrimary>
+// 							</>
+// 						)}
+// 						{stepIndex < currentStep && isActive && renderSummary(stepIndex)}
+// 					</div>
+// 				);
+// 			})}
+// 		</div>
+// 	);
+// };
+
+// export default CheckoutPage;
