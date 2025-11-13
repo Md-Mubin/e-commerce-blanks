@@ -10,5 +10,6 @@
 		"skipLibCheck": true,
 		"moduleResolution": "node"
 		// "baseUrl": ".", // Add this line
-	}
+	},
+	 "include": ["*.ts", "src/**/*.ts"]
 }
